@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include "tratadorString.h"
+#include "chamadaSistema.h"
 
 //char** comandos;
 
@@ -19,7 +20,7 @@ int main(int argc, char* argv[]){
         system("clear");
         printf("gsh> ");
         getline(&entrada, &buffer_size, stdin);
-        printf("entrada lida: %s\n", entrada);
+        //printf("entrada lida: %s\n", entrada);
         
         trataEntrada(entrada, comandos);
 
@@ -27,12 +28,13 @@ int main(int argc, char* argv[]){
         //     if(comandos[i]) execlp()
         // }
 
-        printf("comandos guardados no vetor: ");
-        for(int i = 0; i<5; i++)
-            if(comandos[i]) printf("%s, " ,comandos[i]);
+//        printf("comandos guardados no vetor: ");
+      //  for(int i = 0; i<5; i++)
+    //        if(comandos[i]) printf("%s, " ,comandos[i]);
 
-        printf("\n");
-        
+  //      printf("\n");
+        adicionaCaminho(comandos);
+        resolveComandos(comandos);
 
         //libera memoria alocada
         free(entrada);
