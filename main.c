@@ -2,11 +2,12 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 char** comandos;
 
-void trataEntrada(char* entrada);
-char* remove_spaces(char* s);
+void trataEntrada(char*);
+char* remove_spaces(char*, char*);
 
 int main(int argc, char* argv[]){
 
@@ -17,6 +18,7 @@ int main(int argc, char* argv[]){
 
     printf("Bem vindo ao Ghost Shell!!\n");
     while(1){
+        system("clear");
         printf("gsh> ");
         getline(&entrada, &buffer_size, stdin);
         printf("entrada lida: %s\n", entrada);
@@ -63,7 +65,8 @@ void trataEntrada(char* entrada){
         //aloca e copia o token lido para a string alocada
         int tam_token = strlen(token)+1;
         char* novo_comando = malloc(sizeof(char) * tam_token);
-        strcpy(novo_comando, token);
+        remove_spaces(novo_comando,token);
+        //strcpy(novo_comando, remove_spaces(token));
 
         comandos[i] = novo_comando; //adiciona comando a lista de comandos
 
@@ -75,13 +78,18 @@ void trataEntrada(char* entrada){
 
 
 //remove todos os espaços de uma string
-char* remove_spaces(char* s) {
-    const char* d = s;
-    do {
-        while (*d == ' ') {
-            ++d;
-        }
-    } while (*s++ = *d++);
-    
-    return s;
+char* remove_spaces(char* out, char* s) {
+    const char * aux = s;
+    int i = 0;
+    while( *aux )
+    {
+        if( !isspace(*aux) )
+            out[i++] = *aux;
+
+        aux++;
+    }
+
+    out[i] = 0;
+
+    return out;
 }
