@@ -1,17 +1,15 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <string.h>
-#include <ctype.h>
+#include "tratadorString.h"
 
-char** comandos;
+//char** comandos;
 
-void trataEntrada(char*);
-char* remove_spaces(char*, char*);
+char** trataEntrada(char*, char**); // retorna vetor de comandos
 
 int main(int argc, char* argv[]){
 
-    comandos = malloc(5 * sizeof(char*)); //vetor de comandos lidos de stdin
+    char** comandos = malloc(5 * sizeof(char*)); //vetor de comandos lidos de stdin
 
     char* entrada = NULL;
     size_t buffer_size;
@@ -23,7 +21,7 @@ int main(int argc, char* argv[]){
         getline(&entrada, &buffer_size, stdin);
         printf("entrada lida: %s\n", entrada);
         
-        trataEntrada(entrada);
+        trataEntrada(entrada, comandos);
 
         // for(int i = 0; i < 5;i++){
         //     if(comandos[i]) execlp()
@@ -50,7 +48,7 @@ int main(int argc, char* argv[]){
 
 
 // Tratador de entrada
-void trataEntrada(char* entrada){
+char** trataEntrada(char* entrada, char** comandos){
     int j = 0; //contador de comandos lidos
     int tam_entrada = strlen(entrada)+1;
 
@@ -65,8 +63,8 @@ void trataEntrada(char* entrada){
         //aloca e copia o token lido para a string alocada
         int tam_token = strlen(token)+1;
         char* novo_comando = malloc(sizeof(char) * tam_token);
-        remove_spaces(novo_comando,token);
-        //strcpy(novo_comando, remove_spaces(token));
+        //remove_spaces(novo_comando,token);
+        strcpy(novo_comando, trim(token));
 
         comandos[i] = novo_comando; //adiciona comando a lista de comandos
 
@@ -74,22 +72,5 @@ void trataEntrada(char* entrada){
     }
 
     free(cpy_entrada);
-}
-
-
-//remove todos os espaços de uma string
-char* remove_spaces(char* out, char* s) {
-    const char * aux = s;
-    int i = 0;
-    while( *aux )
-    {
-        if( !isspace(*aux) )
-            out[i++] = *aux;
-
-        aux++;
-    }
-
-    out[i] = 0;
-
-    return out;
+    return comandos;
 }
