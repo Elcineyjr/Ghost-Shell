@@ -1,78 +1,56 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
-#include "tratadorString.h"
-#include "chamadaSistema.h"
-
-//char** comandos;
-
-char** trataEntrada(char*, char**); // retorna vetor de comandos
+#include "utils/tratadorString.h"
+#include "utils/chamadaSistema.h"
 
 int main(int argc, char* argv[]){
 
-    char** comandos = malloc(5 * sizeof(char*)); //vetor de comandos lidos de stdin
-
     char* entrada = NULL;
     size_t buffer_size;
+    char** comandosTok; //token de comandos lidos de stdin, ainda sem tratamento de parametros
+    char*** comandosArgs; //vetor de comandos, sendo cada indice um vetor contendo o comando e seus parametros 
 
+    system("clear"); //comentar essa linha caso rodar valgrind, pq pode bugar a visualizacao
     printf("Bem vindo ao Ghost Shell!!\n");
     while(1){
-        system("clear");
         printf("gsh> ");
         getline(&entrada, &buffer_size, stdin);
-        //printf("entrada lida: %s\n", entrada);
         
-        trataEntrada(entrada, comandos);
+        //quebra a linha de entrada em comandos, separados pelo '#', porem nao trata
+        //os espacos entre os parametros do comando 
+        comandosTok = trataStringPorToken(entrada, "#\n");
 
-        // for(int i = 0; i < 5;i++){
-        //     if(comandos[i]) execlp()
-        // }
+        //caso exista espacos na string de comando significa q tal comando possui parametros,
+        //assim transforma a lista de comandos em uma matriz de comandos e parametros
+        comandosArgs = malloc(5 * sizeof(char**));
+        for(int i = 0; i<5; i++){
+            if(comandosTok[i]){
+               comandosArgs[i] = trataStringPorToken(comandosTok[i], " ");
+            }
+        }
 
-//        printf("comandos guardados no vetor: ");
-      //  for(int i = 0; i<5; i++)
-    //        if(comandos[i]) printf("%s, " ,comandos[i]);
+        resolveComandos(comandosArgs);
 
-  //      printf("\n");
-        adicionaCaminho(comandos);
-        resolveComandos(comandos);
-
-        //libera memoria alocada
-        free(entrada);
-        for(int i = 0; i<5; i++)
-            if(comandos[i]) free(comandos[i]);
-        free(comandos);
-
-        break;
     }
+    
+
+    //libera memoria alocada (TODO deixar isso menos feio)
+    free(entrada);
+    for(int i = 0; i<5; i++){
+        for(int j = 0; j < 5; j++){
+            printf("i : %d\n",i);
+            if(comandosArgs[i]){
+                printf("comandosArgs: %s\n", comandosArgs[i][j]);
+                free(comandosArgs[i][j]);
+            }
+        }
+        free(comandosArgs[i]);
+    }
+    for(int i = 0; i<5; i++)
+        if(comandosTok[i]) free(comandosTok[i]);
+    free(comandosArgs);
+    free(comandosTok);
 
     return 0;
-}
-
-
-// Tratador de entrada
-char** trataEntrada(char* entrada, char** comandos){
-    int j = 0; //contador de comandos lidos
-    int tam_entrada = strlen(entrada)+1;
-
-    //copia entrada para nova variavel para quebra-la em tokens
-    char* cpy_entrada = malloc(sizeof(char) * tam_entrada);
-    strcpy(cpy_entrada, entrada);
-
-    char* token = strtok(cpy_entrada, "#\n"); //le o primeiro comando da linha
-    for(int i = 0; i < 5; i++){     
-        if(!token) break; //se nao tiver comandos ou leu a linha toda, para de ler novos comandos
-        
-        //aloca e copia o token lido para a string alocada
-        int tam_token = strlen(token)+1;
-        char* novo_comando = malloc(sizeof(char) * tam_token);
-        //remove_spaces(novo_comando,token);
-        strcpy(novo_comando, trim(token));
-
-        comandos[i] = novo_comando; //adiciona comando a lista de comandos
-
-        token = strtok(NULL, "#\n"); //le o proximo comando
-    }
-
-    free(cpy_entrada);
-    return comandos;
 }
