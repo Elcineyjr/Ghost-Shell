@@ -11,7 +11,7 @@ int main(int argc, char* argv[]){
     char** comandosTok; //token de comandos lidos de stdin, ainda sem tratamento de parametros
     char*** comandosArgs; //vetor de comandos, sendo cada indice um vetor contendo o comando e seus parametros 
 
-    system("clear"); //comentar essa linha caso rodar valgrind, pq pode bugar a visualizacao
+    // system("clear"); //comentar essa linha caso rodar valgrind, pq pode bugar a visualizacao
     printf("Bem vindo ao Ghost Shell!!\n");
     while(1){
         printf("gsh> ");
@@ -30,27 +30,26 @@ int main(int argc, char* argv[]){
             }
         }
 
-        resolveComandos(comandosArgs);
+        exec(comandosArgs);
+
+        // break;
 
     }
     
 
     //libera memoria alocada (TODO deixar isso menos feio)
     free(entrada);
-    for(int i = 0; i<5; i++){
-        for(int j = 0; j < 5; j++){
-            printf("i : %d\n",i);
-            if(comandosArgs[i]){
-                printf("comandosArgs: %s\n", comandosArgs[i][j]);
-                free(comandosArgs[i][j]);
-            }
-        }
-        free(comandosArgs[i]);
-    }
     for(int i = 0; i<5; i++)
         if(comandosTok[i]) free(comandosTok[i]);
-    free(comandosArgs);
     free(comandosTok);
+
+    for(int i = 0; i<5; i++){
+        for(int j = 0; j < 5; j++)
+            if(comandosArgs[i]) free(comandosArgs[i][j]);
+        free(comandosArgs[i]);
+    }
+    
+    free(comandosArgs);
 
     return 0;
 }
