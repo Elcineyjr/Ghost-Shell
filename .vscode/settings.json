@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "sysWrapper.h": "c",
+        "stringhandler.h": "c"
+    }
+}

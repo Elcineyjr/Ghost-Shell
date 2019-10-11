@@ -3,9 +3,9 @@
 #include <ctype.h>
 #include <stdio.h>
 
-void adicionaCaminho(char*** comando);
-char** trataStringPorToken(char* entrada, const char* token);
-
+int le_entrada(char** input);
+char** quebraStringPorToken(char* input, const char* token);
+void libera_comandos(char** comandos);
 char *ltrim(char*);
 char *rtrim(char*);
 char *trim(char*);

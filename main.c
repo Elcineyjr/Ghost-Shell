@@ -1,55 +1,39 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
-#include "utils/tratadorString.h"
-#include "utils/chamadaSistema.h"
+#include "utils/stringHandler.h"
+#include "utils/sysWrapper.h"
+
+#define QTD_TESTE 3 
+
+//TODO testar bugs em comandos em background
+//TODO tratar sinais
 
 int main(int argc, char* argv[]){
-
     char* entrada = NULL;
-    size_t buffer_size;
-    char** comandosTok; //token de comandos lidos de stdin, ainda sem tratamento de parametros
-    char*** comandosArgs; //vetor de comandos, sendo cada indice um vetor contendo o comando e seus parametros 
 
-    // system("clear"); //comentar essa linha caso rodar valgrind, pq pode bugar a visualizacao
-    printf("Bem vindo ao Ghost Shell!!\n");
-    while(1){
+    char** comandos;
+
+    printf("Bem vindo a Ghost Shell!!\n");
+    int i =0;
+    while(i < QTD_TESTE){ //limita a quantidade de testes pra nao dar ctrl+c enquanto falta tratar sinal
         printf("gsh> ");
-        getline(&entrada, &buffer_size, stdin);
+
+        //caso erro na leitura da entrada volta pro inicio do loop
+        if(!le_entrada(&entrada)) continue;
         
-        //quebra a linha de entrada em comandos, separados pelo '#', porem nao trata
-        //os espacos entre os parametros do comando 
-        comandosTok = trataStringPorToken(entrada, "#\n");
+        //trata entrada para gerar comandos
+        comandos = quebraStringPorToken(entrada, "#");
 
-        //caso exista espacos na string de comando significa q tal comando possui parametros,
-        //assim transforma a lista de comandos em uma matriz de comandos e parametros
-        comandosArgs = malloc(5 * sizeof(char**));
-        for(int i = 0; i<5; i++){
-            if(comandosTok[i]){
-               comandosArgs[i] = trataStringPorToken(comandosTok[i], " ");
-            }
-        }
+        //executa comandos lidos
+        exec(comandos);
 
-        exec(comandosArgs);
-
-        // break;
-
+        //libera memoria alocada 
+        libera_comandos(comandos);
+        free(entrada);
+        
+        i++;
     }
     
-
-    //libera memoria alocada (TODO deixar isso menos feio)
-    free(entrada);
-    for(int i = 0; i<5; i++)
-        if(comandosTok[i]) free(comandosTok[i]);
-    free(comandosTok);
-
-    for(int i = 0; i<5; i++){
-        for(int j = 0; j < 5; j++)
-            if(comandosArgs[i]) free(comandosArgs[i][j]);
-        free(comandosArgs[i]);
-    }
-    
-    free(comandosArgs);
-
     return 0;
 }

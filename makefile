@@ -2,4 +2,4 @@ all:
 	gcc utils/*.c *.c -o ghostShell -g -Wall
 
 clean: 
-	rm -f ghostShel
+	rm -f ghostShell
