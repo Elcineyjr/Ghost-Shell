@@ -1,9 +1,10 @@
 #include "sysWrapper.h"
 #include "stringHandler.h"
+#include "ghost.h"
 
 //checa se vetor de comandos deve ser chamado em background ou foreground
 void exec(char** comandos){
-    if(!comandos[1]){ 
+    if(!comandos[1]){
         execForeground(comandos);
     }else{
         execBackground(comandos);
@@ -17,7 +18,7 @@ void execForeground(char** comandos){
     //quebra a string de comandos por ' ' para separar as flags passadas no comando 
     char** comandos_args = quebraStringPorToken(comandos[0], " ");
     
-    int f = fork();
+    int f = fork_gs();
 
     if(f == 0)
         execvp(comandos_args[0], comandos_args); 
@@ -34,7 +35,7 @@ void execBackground(char** comandos){
 
         char** comandos_args = quebraStringPorToken(comandos[i], " ");
     
-        int f = fork();
+        int f = fork_gs();
 
         if(f == 0)
             execvp(comandos_args[0], comandos_args); 
