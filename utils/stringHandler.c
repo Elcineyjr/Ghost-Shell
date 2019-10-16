@@ -21,7 +21,8 @@ int le_entrada(char** input){
 
 //quebra a string dada de a acordo com o token
 char** quebraStringPorToken(char* input, const char* token){
-    char** arr = malloc(5 * sizeof(char*));
+    char** arr = malloc(5 * sizeof(char*)); // como o número máximo de argumentos especificados no trab é 3, aqui 
+    //deveria ser 4, n? 1 para o comando, e 3 para os argumentos
 
     char* str = strtok(input, token); //le primeira string ate token
     for(int i = 0; i < 5; i++){
