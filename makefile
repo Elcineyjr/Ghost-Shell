@@ -1,5 +1,5 @@
 all: 
-	gcc utils/*.c *.c -o ghostShell -g -Wall
+	gcc utils/*.c main.c -o ghostShell -g -Wall
 
 clean: 
 	rm -f ghostShell
