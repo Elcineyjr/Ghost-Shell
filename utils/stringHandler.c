@@ -1,5 +1,6 @@
 #include "stringHandler.h"
 
+
 int le_entrada(char** input){
     size_t buffSize = 0;
     
@@ -10,6 +11,7 @@ int le_entrada(char** input){
         int pos = strlen(*input) - 1;
         (*input)[pos] = '\0'; //substitui o '\n' por um '\0'
 
+        rewind(stdin);
         return 1;
     }
 
