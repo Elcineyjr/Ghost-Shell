@@ -1,5 +1,5 @@
-#ifndef STRINGHANDLER_H
-#define STRINGHANDLER_H
+#ifndef STRING_HANDLER_H
+#define STRING_HANDLER_H
 
 #include <string.h>
 #include <stdlib.h>

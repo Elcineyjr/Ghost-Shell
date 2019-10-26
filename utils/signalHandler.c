@@ -1,17 +1,17 @@
-#include "sinais.h"
+#include "signalHandler.h"
 
 
 //Caso a shell tenha filhos se deve perguntar se o usuário quer realmente fecha-la com o comando STGINT
 void trata_SIGINT(int i){
-    printf("\n");
-    if( tem_filho() ){ //checa se tem filho
-        printf("\nA shell possui filhos, tem certeza que deseja encerrar sessão? S/N\n");
-        if(getchar() == 'S'){
-            cleanEdie(); 
-            exit(0);
-        }
-        return;
-    }
+    printf("TO NO TRATADOR DO SIGINT\n");
+    // if( tem_filho() ){ //checa se tem filho
+    //     printf("\nA shell possui filhos, tem certeza que deseja encerrar sessão? S/N\n");
+    //     if(getchar() == 'S' || getchar() == 's'){
+    //         cleanEdie(); 
+    //         exit(0);
+    //     }
+    //     return;
+    // }
     
     exit(0);
 }

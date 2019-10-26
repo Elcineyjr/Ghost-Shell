@@ -1,1 +1,0 @@
-void trata_SIGINT();

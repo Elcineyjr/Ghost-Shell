@@ -30,6 +30,7 @@
 
 # Executables
 trab1
+test
 ghostShell
 *.exe
 *.out
