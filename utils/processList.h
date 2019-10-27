@@ -22,7 +22,7 @@ void libera_lista(Lista* lista);
 Process* retira_processo(Lista* lista, int pid);
 void mata_todos_do_grupo(Lista* lista, int gid);
 void suspende_processos(Lista* lista);
-
+void limpa_lista(Lista* lista);
 
 
 

@@ -3,6 +3,7 @@
 
 #define MY_WAIT 1
 #define CLEAN_DIE 2
+#define PRINTME 3
 
 void mywait_();
 void cleanEdie_();

@@ -13,6 +13,9 @@ void trata_SIGINT(int i){
             // cleanEdie(); //TODO tem q dar um clean&die ou é pra finalizar a shell e deixar todos os filhos pra tras?
             exit(0);
         }
+    }else{
+        signal(SIGINT, SIG_DFL);
+        raise(SIGINT);
     }
 }
 

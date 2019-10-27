@@ -11,7 +11,7 @@ Lista* lista_processos;
 struct processo{
     int pid; //process id
     int gid; //group id
-    int ghost; //boolean
+    int ghost; //boolean 
     Process* prox;
 };
 
@@ -138,6 +138,18 @@ void libera_lista(Lista* lista){
     free(lista);
 }
 
+void limpa_lista(Lista* lista){
+    int pid;
+    Process* p = lista -> prim;
+    while(p){
+        pid = p->pid;
+        if(kill(pid,0)){ // caso processo não exista mais
+            retira_processo(lista,pid);
+            libera_processo(p);
+        }
+        p = p -> prox;
+    }
+}
 
 //retira processo da lista
 Process* retira_processo(Lista* lista, int pid){

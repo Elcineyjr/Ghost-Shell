@@ -14,14 +14,11 @@
 #include "utils/processList.h"
 #include "utils/internalCommands.h"
 
-#define QTD_TESTE 10 
-
-
-
+#define QTD_TESTE 10
 
 int main(int argc, char* argv[]){
     srand((unsigned) time(NULL));
-
+    system("clear");
     printf("Bem vindo a Ghost Shell!!\n");
 
     //inicializa listas 
@@ -76,6 +73,8 @@ int main(int argc, char* argv[]){
 
         //libera memoria alocada pra entrada 
         free(entrada);
+        // Limpa a lista de possíveis processos que tenham terminado
+        limpa_lista(lista_processos);
         i++;
     }
 
