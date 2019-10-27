@@ -22,15 +22,21 @@ int main(int argc, char* argv[]){
 
     printf("criando processsos\n");
     Process* p1 = cria_processo(10,100,0);
-    Process* p2 = cria_processo(20,100,0);
+    Process* p2 = cria_processo(20,200,0);
     Process* p3 = cria_processo(30,100,0);
-    Process* p4 = cria_processo(40,100,1);
+    Process* p4 = cria_processo(40,200,1);
 
     printf("inserindo na lista\n");
     insere(l, p1);
     insere(l, p2);
     insere(l, p3);
     insere(l, p4);
+
+    printf("printa lista\n");
+    printa_lista(l);
+
+    printf("matando todos do grupo 200\n");
+    mata_todos_do_grupo(l, 200);
 
     printf("printa lista\n");
     printa_lista(l);

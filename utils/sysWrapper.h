@@ -9,9 +9,9 @@
 #include <sys/types.h>
 #include <time.h>
 #include "stringHandler.h"
+#include "processList.h"
+#include "signalHandler.h"
 
-int eh_comando_interno(char* string);
-void roda_comando_interno(int comando);
 int gerarGhost();
 void exec(char** comandos);
 void execForeground(char** comandos);

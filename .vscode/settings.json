@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "sysWrapper.h": "c",
-        "stringhandler.h": "c"
+        "stringhandler.h": "c",
+        "signalhandler.h": "c"
     }
 }

@@ -1,28 +1,5 @@
 #include "sysWrapper.h"
 
-#define MY_WAIT 1
-#define CLEAN_DIE 2
-
-//verifica se entrada do usuario é um comando interno
-int eh_comando_interno(char* string){
-    if(!strcmp(string, "mywait"))   return MY_WAIT;
-    if(!strcmp(string, "clean&die"))    return CLEAN_DIE;
-
-    return 0;
-}
-
-
-//roda o comando interno recebido
-void roda_comando_interno(int comando){
-    if(comando == MY_WAIT){
-        printf("finge que rodou mywait\n");
-        // mywait();
-    }else{
-        printf("finge que rodou clean&die\n");
-        // cleanEdie();
-    }
-}
-
 
 //função para decidir se certo processo deve gerar um ghost ou nao (50% de chances)
 int gerarGhost(){
@@ -55,14 +32,14 @@ void execForeground(char** comandos){
         libera_comandos(comandos_args);
         return;
     } 
-
+    
     //codigo de execução do filho da shell
     if(f == 0){
-        //seta o tratador de SIGINT do filho para ignorar o sinal
+        //seta o tratador de SIGINT do processo foreground para ignorar o sinal
         struct sigaction handler_filho_sigint = {.sa_handler = SIG_IGN}; 
         if (sigemptyset(&handler_filho_sigint.sa_mask) == -1 ||
             sigaction(SIGINT, &handler_filho_sigint, NULL) == -1)
-            perror("Falha ao definir novo handler para SIGINT nos processos filhos.\n");
+            perror("Falha ao definir novo handler para SIGINT do processo foreground.\n");
 
         //executa comando 
         if(execvp(comandos_args[0], comandos_args) == -1){
@@ -71,17 +48,23 @@ void execForeground(char** comandos){
         }
     }
     
-    //TODO adicionar na lista de processos rodando
+    //insere o processo foreground na lista de processos vivos
+    Process* p = cria_processo(f,f,0);
+    insere(lista_processos, p);
 
     //shell espera filho finalizar
     waitpid(f, &status, 0);
+
+    //remove o processo q era foreground da lista de processos vivos, dado q ele foi waitado
+    Process* p1 = retira_processo(lista_processos, f);
+    if(p1) libera_processo(p1); //libera memoria alocada 
 
     //libera vetor alocado pro comando e suas flags
     libera_comandos(comandos_args);
 }
 
 
-//executa a lista de comandos passados em background                //TODO ver se ta td no msm grupo e tratador de sinais
+//executa a lista de comandos passados em background
 void execBackground(char** comandos){
     int status;
     int status2;
@@ -107,6 +90,10 @@ void execBackground(char** comandos){
 
         if(i == 0) grupo = f; //shell guarda o pid do primeiro comando para add os outros processos no mesmo group
 
+        //adiciona o processo criado na lista de processos vivos
+        Process* processo = cria_processo(f, grupo, 0);
+        insere(lista_processos, processo);
+
         //codigo do processo filho
         if(f == 0){
             //seta o tratador de SIGINT dos filhos em bg para ignorar o sinal
@@ -120,9 +107,10 @@ void execBackground(char** comandos){
             else
                 setpgid(0, grupo); //caso nao seja o primeiro comando, entao entra no mesmo grupo do primeiro comando
 
-
+            
             int ghost = -1;
-            if(gerarGhost()){ //caso filho deva gerar um ghost
+            int random = gerarGhost();
+            if(random){ //caso filho deva gerar um ghost
                 
                 ghost = fork();
 
@@ -130,7 +118,6 @@ void execBackground(char** comandos){
                 if (ghost == -1)
                     printf("Falha no fork do ghost.\n");
                 else{
-                    
                     if(ghost == 0){ //codigo a ser executado pelo ghost
 
                         //coloca o ghost no mesmo grupo q seu pai
@@ -141,9 +128,6 @@ void execBackground(char** comandos){
                             printf("%s: command not found\n", comandos_args[0]);
                             exit(CMD_NOT_FOUND_ERROR);
                         }
-                    }else{ //codigo q o processo pai executa (precisa disso?)
-                        //TODO add ghost na lista de ghost e tudo mais (cuidado pois ghost pode ta setado como -1 por erro no fork)
-
                     }
                 }
             }
@@ -158,12 +142,12 @@ void execBackground(char** comandos){
             } 
         }
 
+        // sleep(1);
+
         //shell nao espera filho criado 
         waitpid(-1, &status, WNOHANG); 
 
         //libera vetor alocado pro comando e suas flags
         libera_comandos(comandos_args);
-        // sleep(1);
-        // printf("gsh> ");
     }
 }

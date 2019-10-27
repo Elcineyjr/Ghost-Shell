@@ -10,10 +10,13 @@
 
 #include "utils/stringHandler.h"
 #include "utils/sysWrapper.h"
-#include "utils/listas.h"
 #include "utils/signalHandler.h"
+#include "utils/processList.h"
+#include "utils/internalCommands.h"
 
 #define QTD_TESTE 10 
+
+
 
 
 int main(int argc, char* argv[]){
@@ -22,14 +25,14 @@ int main(int argc, char* argv[]){
     printf("Bem vindo a Ghost Shell!!\n");
 
     //inicializa listas 
-    // inicializa_filhos(); //inicializa vetor que guarda filhos da shell
+    lista_processos = cria_lista();
 
     char* entrada = NULL;
     char** comandos;
     
     // Instala os novos handlers de sinal
     struct sigaction handler_sigint = {.sa_handler = trata_SIGINT};
-    struct sigaction handler_sigtstp = {.sa_handler = suspende_filhos}; //TODO mudar nome da funçao
+    struct sigaction handler_sigtstp = {.sa_handler = trata_SIGTSTP};
 
 
     //novo handler do sinal SIGTSTP  (ctrl+Z)
@@ -53,7 +56,12 @@ int main(int argc, char* argv[]){
         //verifica se usuario digitou um comando interno ou externo e o executa
         int flag = eh_comando_interno(entrada);
         if(flag){
-            roda_comando_interno(flag); //TODO pensar no clean&die, pq tem q liberar a memoria da entrada lida
+            roda_comando_interno(flag);
+            
+            if(flag == CLEAN_DIE){
+                free(entrada);
+                break; //clean&die nao da exit pq tem q liberar a memoria 
+            }
         }else{
             //trata entrada para gerar comandos
             comandos = quebraStringPorToken(entrada, "#");
@@ -64,10 +72,14 @@ int main(int argc, char* argv[]){
             libera_comandos(comandos);
         }
 
+        sleep(1); //TODO eu acho isso feio, pode dar a impressao q o programa ta lento
+
         //libera memoria alocada pra entrada 
         free(entrada);
         i++;
     }
+
+    libera_lista(lista_processos);
 
     return 0;
 }
