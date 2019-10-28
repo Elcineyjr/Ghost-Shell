@@ -4,5 +4,6 @@
 void trata_SIGINT(int i);
 void trata_SIGTSTP(int i);
 void trata_SIGCHLD(int i);
+int get_process_SIGCHLD();
 
 #endif

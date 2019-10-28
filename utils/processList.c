@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <wait.h>
 
 
@@ -224,17 +225,7 @@ void mata_todos_do_grupo(Lista* lista, int gid){
     killpg(gid, SIGKILL);
 }
 
-int get_process_SIGCHLD(Lista* lista){
-    int pid, status;
-    Process* aux = lista->prim;
-    while(aux){
-        pid = waitpid(aux->pid,&status,WNOHANG);
-        //printf("Status de saída: %d\n",status);
-        if (pid == 0 && status > 0) return aux->gid;
-        aux = aux->prox;
-    }
-    return -1;
-}
+
 
 
 //suspende todos os processos filhos (diretos e indiretos) da shell

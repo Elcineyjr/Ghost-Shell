@@ -13,6 +13,7 @@
 //Caso a shell tenha filhos se deve perguntar se o usuário quer realmente fecha-la com o comando STGINT
 void trata_SIGINT(int i){
     //caso exista algum filho da shell ainda vivo, deve-se confirmar com usuario se ele quer mesmo finalizar a shell
+    limpa_lista(lista_processos);
     if(!lista_vazia(lista_processos)){
         printf("\nA shell possui filhos, tem certeza que deseja encerrar sessão? S/N\n");
         char c = getchar();
@@ -39,9 +40,16 @@ void trata_SIGTSTP(int i){
 
 
 void trata_SIGCHLD(int i){
-    int gid =  get_process_SIGCHLD(lista_processos);
+    int gid =  get_process_SIGCHLD(lista_processos);    
     //printf("grupo: %d",gid);
-    mata_todos_do_grupo(lista_processos, gid);    
+    mata_todos_do_grupo(lista_processos, gid);
     //signal(SIGCHLD,SIG_DFL);
     //raise(SIGCHLD);
+}
+
+int get_process_SIGCHLD(){
+    siginfo_t status;
+    waitid(P_ALL, 0, &status, WNOWAIT | WNOHANG | WEXITED);
+    if (status.si_pid > 0 && status.si_code > 0) return  getpgid(status.si_pid);
+    return -1;
 }

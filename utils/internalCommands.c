@@ -13,7 +13,7 @@ void mywait_(){
         if(kill(SIGKILL, pid)){
             Process* p = retira_processo(lista_processos,pid);
             libera_processo(p);
-        }        
+        }
     }
     printf("filhos zombies coletados!!\n");
 }

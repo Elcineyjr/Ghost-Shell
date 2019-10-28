@@ -2,6 +2,7 @@
     "C_Cpp.errorSquiggles": "Disabled",
     "files.associations": {
         "wait.h": "c",
-        "types.h": "c"
+        "types.h": "c",
+        "caca_conio.h": "c"
     }
 }

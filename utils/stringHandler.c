@@ -6,7 +6,7 @@ int le_entrada(char** input){
     
     //checa se usuario digitou pelo menos um caracter 
     int line;
-    if ((line = getline(input, &buffSize, stdin)) > 1){ 
+    if ((line = getline(input, &buffSize, stdin)) > 1){
 
         int pos = strlen(*input) - 1;
         (*input)[pos] = '\0'; //substitui o '\n' por um '\0'
@@ -19,6 +19,10 @@ int le_entrada(char** input){
     rewind(stdin); //caso ocorra erro na leitura limpa o buffer
     return 0;
 }
+
+// int getSetas(char** input){
+
+// }
 
 
 //quebra a string dada de a acordo com o token

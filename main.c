@@ -38,9 +38,9 @@ int main(int argc, char* argv[]){
         sigaction(SIGTSTP, &handler_sigtstp, NULL) == -1)
         perror("Falha ao definir novo handler para SIGTSTP\n"); 
     
-    if (sigemptyset(&handler_sigchld.sa_mask) == -1 ||
-        sigaction(SIGCHLD, &handler_sigchld, NULL) == -1)
-        perror("Falha ao definir novo handler para SIGCHLD\n"); 
+     if (sigemptyset(&handler_sigchld.sa_mask) == -1 ||
+         sigaction(SIGCHLD, &handler_sigchld, NULL) == -1)
+         perror("Falha ao definir novo handler para SIGCHLD\n"); 
 
 
     //novo handler do sinal SIGINT   (ctrl+C)
@@ -48,13 +48,22 @@ int main(int argc, char* argv[]){
         sigaction(SIGINT, &handler_sigint, NULL) == -1)
             perror("Falha ao definir novo handler para SIGINT");
 
-
+    
     int i = 0;
     while(i < QTD_TESTE){ //limita a quantidade de testes 
-        printf("gsh> ");
+        
+        printf("gsh>"); 
 
         //caso erro na leitura da entrada volta pro inicio do loop
-        if (!le_entrada(&entrada)) continue;
+        // if (getch() == 224){
+        //     printf("Comando anterior:\ngsh>");
+        // }
+
+        if (!le_entrada(&entrada)){
+            //printf("\e[H\e[2J");
+            continue;  
+        }
+        
 
         //verifica se usuario digitou um comando interno ou externo e o executa
         int flag = eh_comando_interno(entrada);

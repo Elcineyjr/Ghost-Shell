@@ -75,6 +75,8 @@ void execBackground(char** comandos){
         //quebra a string de comandos por ' ' para separar as flags passadas no comando 
         char** comandos_args = quebraStringPorToken(comandos[i], " ");
         
+        int ghost_gerado = gerarGhost();
+
         //gera filho pra rodar o comando
         int f = fork();
          
@@ -90,6 +92,7 @@ void execBackground(char** comandos){
         Process* processo = cria_processo(f, grupo, 0);
         insere(lista_processos, processo);
 
+        
         //codigo do processo filho
         if(f == 0){
             //seta o tratador de SIGINT dos filhos em bg para ignorar o sinal
@@ -104,12 +107,10 @@ void execBackground(char** comandos){
                 setpgid(0, grupo); //caso nao seja o primeiro comando, entao entra no mesmo grupo do primeiro comando
 
             
-            int ghost = -1;
             
-            if(gerarGhost()){ //caso filho deva gerar um ghost
-                
-                ghost = fork();
-
+            
+            if(ghost_gerado){ //caso filho deva gerar um ghost
+                int ghost = fork();
                 //checa falha no fork 
                 if (ghost == -1)
                     printf("Falha no fork do ghost.\n");
