@@ -48,16 +48,12 @@ void execForeground(char** comandos){
         }
     }
     
-    //insere o processo foreground na lista de processos vivos
-    Process* p = cria_processo(f,f,0);
-    insere(lista_processos, p);
+    signal(SIGINT, SIG_IGN);    //ignora o SIGINT enquanto tem um processo foreground
 
     //shell espera filho finalizar
     waitpid(f, &status, 0);
 
-    //remove o processo q era foreground da lista de processos vivos, dado q ele foi waitado
-    Process* p1 = retira_processo(lista_processos, f);
-    if(p1) libera_processo(p1); //libera memoria alocada 
+    signal(SIGINT, trata_SIGINT); //restaura o SIGINT apos o processo foreground terminar
 
     //libera vetor alocado pro comando e suas flags
     libera_comandos(comandos_args);

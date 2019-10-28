@@ -143,12 +143,13 @@ void limpa_lista(Lista* lista){
     Process* p = lista -> prim;
     while(p){
         pid = p->pid;
+        Process* aux = p->prox; //guarda o prox, para n perder a referencia caso for liberar o processo atual
+
         if(kill(pid,0)){ // caso processo não exista mais
-       // printf("processo %d não existe mais, eliminando...\n",p->pid);
             retira_processo(lista,pid);
             libera_processo(p);
         }
-        p = p -> prox;
+        p = aux;
     }
 }
 
