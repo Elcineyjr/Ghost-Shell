@@ -1,7 +1,3 @@
-#include <string.h>
-#include <stdio.h>
-#include <wait.h>
-
 #include "internalCommands.h"
 #include "processList.h"
 #include "signalHandler.h"
@@ -9,18 +5,18 @@
 
 //mywait
 void mywait_(){
-    int pid = 0;
+    int pid = 1;
     int status;
-
-    while(pid != -1){   //TODO sempre fica com pid = 0 e nao sai do loop
+    limpa_lista(lista_processos);
+    while(pid > 0){   //TODO sempre fica com pid = 0 e nao sai do loop
         pid = waitpid(-1, &status, WNOHANG);        
         if(kill(SIGKILL, pid)){
             Process* p = retira_processo(lista_processos,pid);
             libera_processo(p);
         }        
-        printf("pid: %d\n", pid);
+      //  printf("pid: %d\n", pid);
     }
-    printf("filhos zombies coletados!!\n");
+    printf("\nfilhos zombies coletados!!\n");
 }
 
 

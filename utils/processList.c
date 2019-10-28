@@ -1,9 +1,9 @@
 #include "processList.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <sys/types.h>
+#include <wait.h>
 
 
 Lista* lista_processos;
@@ -144,6 +144,7 @@ void limpa_lista(Lista* lista){
     while(p){
         pid = p->pid;
         if(kill(pid,0)){ // caso processo não exista mais
+       // printf("processo %d não existe mais, eliminando...\n",p->pid);
             retira_processo(lista,pid);
             libera_processo(p);
         }
@@ -220,6 +221,17 @@ void mata_todos_do_grupo(Lista* lista, int gid){
     }
 
     killpg(gid, SIGKILL);
+}
+
+int get_process_SIGCHLD(Lista* lista){
+    int pid, status;
+    Process* aux = lista->prim;
+    while(aux){
+        pid = waitpid(aux->pid,&status,WNOHANG);
+        if (pid == 0) return aux->gid;
+        aux = aux->prox;
+    }
+    return -1;
 }
 
 

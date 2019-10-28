@@ -5,6 +5,10 @@
 #define CLEAN_DIE 2
 #define PRINTME 3
 
+#include <string.h>
+#include <stdio.h>
+#include <wait.h>
+
 void mywait_();
 void cleanEdie_();
 

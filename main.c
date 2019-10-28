@@ -30,12 +30,18 @@ int main(int argc, char* argv[]){
     // Instala os novos handlers de sinal
     struct sigaction handler_sigint = {.sa_handler = trata_SIGINT};
     struct sigaction handler_sigtstp = {.sa_handler = trata_SIGTSTP};
+    struct sigaction handler_sigchld = {.sa_handler = trata_SIGCHLD};
 
 
     //novo handler do sinal SIGTSTP  (ctrl+Z)
     if (sigemptyset(&handler_sigtstp.sa_mask) == -1 ||
         sigaction(SIGTSTP, &handler_sigtstp, NULL) == -1)
         perror("Falha ao definir novo handler para SIGTSTP\n"); 
+    
+    if (sigemptyset(&handler_sigtstp.sa_mask) == -1 ||
+        sigaction(SIGCHLD, &handler_sigchld, NULL) == -1)
+        perror("Falha ao definir novo handler para SIGCHLD\n"); 
+
 
     //novo handler do sinal SIGINT   (ctrl+C)
     if (sigemptyset(&handler_sigint.sa_mask) == -1 ||

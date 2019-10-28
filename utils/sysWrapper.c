@@ -109,8 +109,8 @@ void execBackground(char** comandos){
 
             
             int ghost = -1;
-            int random = gerarGhost();
-            if(random){ //caso filho deva gerar um ghost
+            
+            if(gerarGhost()){ //caso filho deva gerar um ghost
                 
                 ghost = fork();
 
