@@ -42,6 +42,6 @@ void trata_SIGCHLD(int i){
     int gid =  get_process_SIGCHLD(lista_processos);
     //printf("grupo: %d",gid);
     mata_todos_do_grupo(lista_processos, gid);    
-    signal(SIGCHLD,SIG_DFL);
-    raise(SIGCHLD);
+    //signal(SIGCHLD,SIG_DFL);
+    //raise(SIGCHLD);
 }

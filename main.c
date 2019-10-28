@@ -38,7 +38,7 @@ int main(int argc, char* argv[]){
         sigaction(SIGTSTP, &handler_sigtstp, NULL) == -1)
         perror("Falha ao definir novo handler para SIGTSTP\n"); 
     
-    if (sigemptyset(&handler_sigtstp.sa_mask) == -1 ||
+    if (sigemptyset(&handler_sigchld.sa_mask) == -1 ||
         sigaction(SIGCHLD, &handler_sigchld, NULL) == -1)
         perror("Falha ao definir novo handler para SIGCHLD\n"); 
 

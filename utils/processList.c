@@ -228,7 +228,8 @@ int get_process_SIGCHLD(Lista* lista){
     Process* aux = lista->prim;
     while(aux){
         pid = waitpid(aux->pid,&status,WNOHANG);
-        if (pid == 0) return aux->gid;
+        //printf("Status de saída: %d\n",status);
+        if (pid == 0 && status > 0) return aux->gid;
         aux = aux->prox;
     }
     return -1;
