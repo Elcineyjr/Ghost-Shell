@@ -50,19 +50,11 @@ int main(int argc, char* argv[]){
     
     
     while(1){ 
-        
         printf("gsh>");    
 
-        //caso erro na leitura da entrada volta pro inicio do loop
-        // if (getch() == 224){
-        //     printf("Comando anterior:\ngsh>");
-        // }
-
-        if (!le_entrada(&entrada)){
-            continue;  
-        }
+        //caso erro na leitura da entrada 
+        if (!le_entrada(&entrada))  continue;  
         
-
         //verifica se usuario digitou um comando interno ou externo e o executa
         int flag = eh_comando_interno(entrada);
         if(flag){
@@ -82,14 +74,16 @@ int main(int argc, char* argv[]){
             libera_comandos(comandos);
         }
 
-        sleep(1);
+        sleep(1); //para evitar que processos em background, que imprimem na tela, bagunçem a formatação da shell
 
         //libera memoria alocada pra entrada 
         free(entrada);
+        
         // Limpa a lista de possíveis processos que tenham terminado
         limpa_lista(lista_processos);        
     }
 
+    //libera memora alocada para a lista de processos vivos
     libera_lista(lista_processos);
 
     return 0;

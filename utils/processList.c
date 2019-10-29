@@ -139,6 +139,8 @@ void libera_lista(Lista* lista){
     free(lista);
 }
 
+
+//remove processos q ja finalizaram da lista de processos vivos
 void limpa_lista(Lista* lista){
     int pid;
     Process* p = lista -> prim;
@@ -153,6 +155,7 @@ void limpa_lista(Lista* lista){
         p = aux;
     }
 }
+
 
 //retira processo da lista
 Process* retira_processo(Lista* lista, int pid){
@@ -224,8 +227,6 @@ void mata_todos_do_grupo(Lista* lista, int gid){
 
     killpg(gid, SIGKILL);
 }
-
-
 
 
 //suspende todos os processos filhos (diretos e indiretos) da shell

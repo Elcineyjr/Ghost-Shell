@@ -7,14 +7,13 @@ int le_entrada(char** input){
     //checa se usuario digitou pelo menos um caracter 
     int line;
     if ((line = getline(input, &buffSize, stdin)) > 1){
-        //printf("\n%d %s\n",line, *input);
+
         int pos = strlen(*input) - 1;
         (*input)[pos] = '\0'; //substitui o '\n' por um '\0'
 
         rewind(stdin);
         return 1;
     }
-    //printf("\noutra coisa\n");
     free(*input); 
     rewind(stdin); //caso ocorra erro na leitura limpa o buffer
     return 0;
@@ -23,8 +22,7 @@ int le_entrada(char** input){
 
 //quebra a string dada de a acordo com o token
 char** quebraStringPorToken(char* input, const char* token){
-    char** arr = malloc(5 * sizeof(char*)); // como o número máximo de argumentos especificados no trab é 3, aqui 
-    //deveria ser 4, n? 1 para o comando, e 3 para os argumentos
+    char** arr = malloc(5 * sizeof(char*));
 
     char* str = strtok(input, token); //le primeira string ate token
     for(int i = 0; i < 5; i++){
