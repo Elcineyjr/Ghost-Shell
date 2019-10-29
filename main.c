@@ -14,8 +14,6 @@
 #include "utils/processList.h"
 #include "utils/internalCommands.h"
 
-#define QTD_TESTE 10
-
 int main(int argc, char* argv[]){
     srand((unsigned) time(NULL));
     system("clear");
@@ -38,6 +36,7 @@ int main(int argc, char* argv[]){
         sigaction(SIGTSTP, &handler_sigtstp, NULL) == -1)
         perror("Falha ao definir novo handler para SIGTSTP\n"); 
     
+    // novo handler do SIGCHLD (quando processo filho morre)
      if (sigemptyset(&handler_sigchld.sa_mask) == -1 ||
          sigaction(SIGCHLD, &handler_sigchld, NULL) == -1)
          perror("Falha ao definir novo handler para SIGCHLD\n"); 
@@ -49,10 +48,10 @@ int main(int argc, char* argv[]){
             perror("Falha ao definir novo handler para SIGINT");
 
     
-    int i = 0;
-    while(i < QTD_TESTE){ //limita a quantidade de testes 
+    
+    while(1){ 
         
-        printf("gsh>"); 
+        printf("gsh>");
 
         //caso erro na leitura da entrada volta pro inicio do loop
         // if (getch() == 224){
@@ -60,7 +59,6 @@ int main(int argc, char* argv[]){
         // }
 
         if (!le_entrada(&entrada)){
-            //printf("\e[H\e[2J");
             continue;  
         }
         
@@ -84,13 +82,12 @@ int main(int argc, char* argv[]){
             libera_comandos(comandos);
         }
 
-        sleep(1); //TODO eu acho isso feio, pode dar a impressao q o programa ta lento
+        sleep(1);
 
         //libera memoria alocada pra entrada 
         free(entrada);
         // Limpa a lista de possíveis processos que tenham terminado
-        limpa_lista(lista_processos);
-        i++;
+        limpa_lista(lista_processos);        
     }
 
     libera_lista(lista_processos);

@@ -20,10 +20,6 @@ int le_entrada(char** input){
     return 0;
 }
 
-// int getSetas(char** input){
-
-// }
-
 
 //quebra a string dada de a acordo com o token
 char** quebraStringPorToken(char* input, const char* token){

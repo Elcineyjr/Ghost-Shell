@@ -10,7 +10,7 @@ void mywait_(){
     limpa_lista(lista_processos);
     while(pid > 0){
         pid = waitpid(-1, &status, WNOHANG);        
-        if(kill(SIGKILL, pid)){
+        if(kill(pid, 0)){
             Process* p = retira_processo(lista_processos,pid);
             libera_processo(p);
         }

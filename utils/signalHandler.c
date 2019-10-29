@@ -7,6 +7,7 @@
 #include <signal.h>
 #include <string.h>
 #include <sys/wait.h>
+#include <sys/types.h>
 #include <sys/resource.h>
 
 
@@ -18,10 +19,7 @@ void trata_SIGINT(int i){
         printf("\nA shell possui filhos, tem certeza que deseja encerrar sessão? S/N\n");
         char c = getchar();
         if(!(c == 'S' || c == 's')){
-            return;
-            //printf("Finalizando!\n");
-            // cleanEdie(); //TODO tem q dar um clean&die ou é pra finalizar a shell e deixar todos os filhos pra tras?
-            //exit(0);
+            return;            
         }
     }
     signal(SIGINT, SIG_DFL);
@@ -31,22 +29,17 @@ void trata_SIGINT(int i){
 
 //suspende todos os processos (foreground, background e ghosts) menos a propria shell
 void trata_SIGTSTP(int i){
-    printf("\nSuspendendo todos os filhos.\n");
-    
+    printf("\nSuspendendo todos os filhos.\n");    
     suspende_processos(lista_processos);
-
     raise(SIGCONT);
 }
 
-
+// mata processos com mesmo pgid de um processo morto por um sinal
 void trata_SIGCHLD(int i){
-    int gid =  get_process_SIGCHLD(lista_processos);    
-    //printf("grupo: %d",gid);
+    int gid = get_process_SIGCHLD(lista_processos);    
     mata_todos_do_grupo(lista_processos, gid);
-    //signal(SIGCHLD,SIG_DFL);
-    //raise(SIGCHLD);
 }
-
+// Verifica qual processo filho morreu, pega seu pgdid, e retorna para a função trata_SIGCHLD
 int get_process_SIGCHLD(){
     siginfo_t status;
     waitid(P_ALL, 0, &status, WNOWAIT | WNOHANG | WEXITED);

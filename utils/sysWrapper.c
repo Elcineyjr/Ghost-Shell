@@ -139,8 +139,6 @@ void execBackground(char** comandos){
             } 
         }
 
-        // sleep(1);
-
         //shell nao espera filho criado 
         waitpid(-1, &status, WNOHANG); 
 
