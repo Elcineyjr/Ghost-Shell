@@ -51,7 +51,7 @@ int main(int argc, char* argv[]){
     
     while(1){ 
         
-        printf("gsh>");
+        printf("gsh>");    
 
         //caso erro na leitura da entrada volta pro inicio do loop
         // if (getch() == 224){

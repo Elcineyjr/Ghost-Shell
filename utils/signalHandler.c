@@ -36,13 +36,21 @@ void trata_SIGTSTP(int i){
 
 // mata processos com mesmo pgid de um processo morto por um sinal
 void trata_SIGCHLD(int i){
-    int gid = get_process_SIGCHLD(lista_processos);    
-    mata_todos_do_grupo(lista_processos, gid);
+    //printf("%d\n",i);
+    int gid = get_process_SIGCHLD(lista_processos);
+    //printf("%d",gid);
+    if(gid != -1) mata_todos_do_grupo(lista_processos, gid);
+    //raise(SIGCHLD);
 }
 // Verifica qual processo filho morreu, pega seu pgdid, e retorna para a função trata_SIGCHLD
 int get_process_SIGCHLD(){
     siginfo_t status;
-    waitid(P_ALL, 0, &status, WNOWAIT | WNOHANG | WEXITED);
-    if (status.si_pid > 0 && status.si_code > 0) return  getpgid(status.si_pid);
+    int id = waitid(P_ALL, 0, &status, WNOWAIT | WNOHANG | WEXITED);
+    //printf("status.si_pid = %d status.si_code = %d id = %d\n",status.si_pid,status.si_code,id);
+    if (status.si_pid > 0 && status.si_code == CLD_KILLED && id == 0) {
+        int gid = getpgid(status.si_pid);
+        waitpid(status.si_pid, NULL, WNOHANG);
+        return gid;
+    }
     return -1;
 }

@@ -7,14 +7,14 @@ int le_entrada(char** input){
     //checa se usuario digitou pelo menos um caracter 
     int line;
     if ((line = getline(input, &buffSize, stdin)) > 1){
-
+        //printf("\n%d %s\n",line, *input);
         int pos = strlen(*input) - 1;
         (*input)[pos] = '\0'; //substitui o '\n' por um '\0'
 
         rewind(stdin);
         return 1;
     }
-
+    //printf("\noutra coisa\n");
     free(*input); 
     rewind(stdin); //caso ocorra erro na leitura limpa o buffer
     return 0;
